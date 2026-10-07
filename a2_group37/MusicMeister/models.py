@@ -22,7 +22,7 @@ class Event(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
-    description = db.Column(db.String(255), index=true)
+    description = db.Column(db.String(255), index=True)
     image_path = db.Column(db.String(64), default="./static/img/band.jpg")
     datetime = db.Column(db.DateTime)
     category = db.Column(db.String(64), index=True)
