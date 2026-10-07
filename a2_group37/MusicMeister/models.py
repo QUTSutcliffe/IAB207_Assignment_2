@@ -31,14 +31,20 @@ class Event(db.Model):
     status = db.Column(db.String(64), index=True)
     acknowledgement = db.Column(db.String(1000))
     
-    owner_id = db.Column(db.Integer, db.ForeinKey('user.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
     orders = db.relationship("Order", backref="event")
+    comments = db.relationship("Comment", backref="event")
     
 class Comment(db.Model):
     __tablename__ = "comments"
     
     id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(1000))
+    datetime = db.Column(db.DateTime)
+    
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    commented_event = db.Column(db.Integer, db.ForeignKey("events.id"))
     
 class Order(db.Model):
     __tablename__ = "orders"
@@ -48,5 +54,5 @@ class Order(db.Model):
     ticket_quantity = db.Column(db.Integer)
     time_ordered = db.Column(db.DateTime)
     
-    orderer = db.Column(db.Integer, db.ForeinKey("user.id"))
-    for_event = db.Column(db.Integer, db.ForeinKey("events.id"))
+    orderer = db.Column(db.Integer, db.ForeignKey("user.id"))
+    for_event = db.Column(db.Integer, db.ForeignKey("events.id"))
