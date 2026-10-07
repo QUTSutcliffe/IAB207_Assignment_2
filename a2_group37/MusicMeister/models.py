@@ -6,6 +6,13 @@ class User(db.Model, UserMixin):
     __tablename__ = "user"
     
     id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(64))
+    surname = db.Column(db.String(64))
+    email = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    contact_number = db.Column(db.String(12))
+    address = db.Column(db.String(64))
+    
     
     events = db.relationship("Event", backref="owner")
     orders = db.relationship("Order", backref="orderer")
