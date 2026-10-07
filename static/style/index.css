@@ -1,0 +1,48 @@
+.dropdown-toggle::after {
+    display: none;
+}
+
+
+.nav-item.bum{
+    margin: 1rem;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.nav-pills {
+    gap: 5px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+.card .btn {
+    width: 100%;
+}
+
+.card .btn.position-absolute {
+    width: auto;
+}
