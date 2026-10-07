@@ -8,6 +8,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     
     events = db.relationship("Event", backref="owner")
+    orders = db.relationship("Order", backref="orderer")
     
 class Event(db.Model):
     __tablename__ = "events"
@@ -25,6 +26,8 @@ class Event(db.Model):
     
     owner_id = db.Column(db.Integer, db.ForeinKey('user.id'))
     
+    orders = db.relationship("Order", backref="event")
+    
 class Comment(db.Model):
     __tablename__ = "comments"
     
@@ -34,3 +37,9 @@ class Order(db.Model):
     __tablename__ = "orders"
     
     id = db.Column(db.Integer, primary_key=True)
+    price = db.Column(db.Integer)
+    ticket_quantity = db.Column(db.Integer)
+    time_ordered = db.Column(db.DateTime)
+    
+    orderer = db.Column(db.Integer, db.ForeinKey("user.id"))
+    for_event = db.Column(db.Integer, db.ForeinKey("events.id"))
