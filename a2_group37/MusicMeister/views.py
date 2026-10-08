@@ -1,7 +1,11 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    return '<h1>Starter code for assignment 3<h1>'
+    return render_template('index.html')
+
+@main_bp.route('/details')
+def details():
+    return render_template('details.html')
