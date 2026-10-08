@@ -1,0 +1,130 @@
+ {% extends "base.html" %}
+
+   {% block styles %}
+    <link href="./static/style/index.css" rel="stylesheet">
+    {% endblock %}
+
+   {% block content %}
+ <main class="container text-center mt-5">
+
+        <h1>Booking History</h1>
+
+        <p class="text-muted">
+            View the events you have previously booked.
+        </p>
+
+
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="./static/img/pexels-anthonyshkraba-production-8040838.jpg" class="card-img-top"
+                    alt="Thunder Road event">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Thunder Road
+                    </h5>
+                    <p class="card-text">
+                        <strong>Booking ID:</strong><br>
+                        #BK-10482
+                    </p>
+                    <p class="card-text">
+                        <strong>Booked:</strong><br>
+                        5 September 2026<br>
+                        2:34 PM
+                    </p>
+                    <a href="./details.html" class="btn btn-primary">
+                        See Event
+                    </a>
+                </div>
+            </div>
+
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="./static/img/pexels-dimkidama-14357234.jpg" class="card-img-top"
+                    alt="Country Roads Live event">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Country Roads Live
+                    </h5>
+                    <p class="card-text">
+                        <strong>Booking ID:</strong><br>
+                        #BK-10391
+                    </p>
+                    <p class="card-text">
+                        <strong>Booked:</strong><br>
+                        28 August 2026<br>
+                        7:15 PM
+                    </p>
+                    <a href="./details.html" class="btn btn-primary">
+                        See Event
+                    </a>
+                </div>
+            </div>
+
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="./static/img/pexels-eugene-bolshem-722706948-33284931.jpg" class="card-img-top"
+                    alt="Urban Beats event">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Urban Beats
+                    </h5>
+                    <p class="card-text">
+                        <strong>Booking ID:</strong><br>
+                        #BK-10276
+                    </p>
+                    <p class="card-text">
+                        <strong>Booked:</strong><br>
+                        19 August 2026<br>
+                        11:42 AM
+                    </p>
+                    <a href="./details.html" class="btn btn-primary">
+                        See Event
+                    </a>
+                </div>
+            </div>
+
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="./static/img/pexels-gustavo-fring-3984826.jpg" class="card-img-top"
+                    alt="Electric Nights event">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Electric Nights
+                    </h5>
+                    <p class="card-text">
+                        <strong>Booking ID:</strong><br>
+                        #BK-10154
+                    </p>
+                    <p class="card-text">
+                        <strong>Booked:</strong><br>
+                        10 August 2026<br>
+                        4:08 PM
+                    </p>
+                    <a href="./details.html" class="btn btn-primary">
+                        See Event
+                    </a>
+                </div>
+            </div>
+
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="./static/img/pexels-gustavo-fring-3984830.jpg" class="card-img-top"
+                    alt="Smooth Sessions event">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Smooth Sessions
+                    </h5>
+                    <p class="card-text">
+                        <strong>Booking ID:</strong><br>
+                        #BK-10083
+                    </p>
+                    <p class="card-text">
+                        <strong>Booked:</strong><br>
+                        2 August 2026<br>
+                        9:27 AM
+                    </p>
+                    <a href="./details.html" class="btn btn-primary">
+                        See Event
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    {% endblock %}

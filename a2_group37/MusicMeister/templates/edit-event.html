@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+   {% block styles %}
+    
+    {% endblock %}
+
+   {% block content %}
+<main class="container my-5">
+        <a href="./index.html" class="btn btn-outline-secondary mb-4">
+            Back to Events
+        </a>
+        <div class="row g-5">
+            <div class="col-12 col-lg-6">
+                <img src="./static/img/pexels-thatguycraig000-1588075.jpg" class="img-fluid rounded shadow w-100"
+                    alt="Thunder Road performing live">
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="form-floating mb-4">
+                    <textarea class="form-control" id="floatingTextarea">Midnight Riot</textarea>
+                    <label for="floatingTextarea">Title</label>
+                </div>
+                <p class="mb-4"> <strong>Event Status:</strong> <span class="badge bg-success">Open</span>
+                    <br />
+                    <small>Event status is managed automatically.</small>
+                </p>
+
+                <div class="form-floating mb-4">
+                    <textarea class="form-control"
+                        id="floatingTextarea">A loud and energetic night of hard rock and live guitar performances. </textarea>
+                    <label for="floatingTextarea">Description</label>
+                </div>
+                <hr>
+                <h2 class="mb-4"> Event Information </h2>
+                <div class="row mb-3">
+                    <div class="col-sm-4"> <strong>Venue:</strong> </div>
+                    <input class="col-sm-8" type="text" value="The Underground Music Hall"></input>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"> <strong>Location:</strong> </div>
+                    <input class="col-sm-8" type="text" value="Brisbane, Queensland"></input>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"> <strong>Date:</strong> </div>
+                    <input class="col-sm-8" type="date" value="2026-09-20" />
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"> <strong>Start Time:</strong> </div>
+                    <input class="col-sm-8" type="time" value="19:00">
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"> <strong>End Time:</strong> </div>
+                    <input class="col-sm-8" type="time" value="23:00">
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"> <strong>Genre:</strong> </div>
+                    <div class="col-sm-8">
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Rock</option>
+                            <option value="1">Country</option>
+                            <option value="2">Hip Hop</option>
+                            <option value="3">Pop</option>
+                            <option value="4">EDM</option>
+                            <option value="5">Jazz</option>
+                            <option value="6">Classical</option>
+                            <option value="7">Latin</option>
+                            <option value="8">Reggae</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"> <strong>Planned Program:</strong> </div>
+                    <div class="col-sm-8">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                                style="height: 100px">
+Doors open at 6:30 PM
+Opening local artist
+Thunder Road live performance
+Encore performance
+                        </textarea>
+                            <label for="floatingTextarea2">Program</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-sm-4"><strong>Program Runtime:</strong></div>
+                    <input class="col-sm-8" type="text" value="Approximately 4 hours"></input>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-sm-4"><strong>Acknowledgement:</strong></div>
+                    <div class="col-sm-8">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                                style="height: 100px">
+We acknowledge the Traditional Custodians of the land on which this event takes place and pay respect to Elders past and present. 
+                        </textarea>
+                            <label for="floatingTextarea2">Acknowledgement</label>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h2 class="mb-4"> Ticket Information </h2>
+                <div class="row mb-3">
+                    <div class="col-sm-6"> <strong>Tickets Required:</strong> </div>
+                    <div class="col-sm-6">
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Yes</option>
+                            <option value="1">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6"> <strong>Total Ticket Capacity:</strong> </div>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="ticketQuantity" min="1" max="1000" value="1"
+                            required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6"> <strong>Tickets Booked:</strong> </div>
+                    <div class="col-sm-6"> 125 </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-sm-6"> <strong>Tickets Available:</strong> </div>
+                    <div class="col-sm-6"> <span class="badge bg-success fs-6"> 75 tickets remaining </span> </div>
+                </div>
+                <hr>
+                <section>
+                    <h2 class="mb-3">Update Event</h2>
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <form>
+                                <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#updateModal">
+                                    Update Event
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                <hr>
+                <section>
+                    <h2 class="mb-3">Cancel Event</h2>
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <strong class="">
+                                This will cancel your event and refund all tickets. This is irreversible and cannot be
+                                undone.
+                            </strong>
+                            <form>
+                                <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
+                                    data-bs-target="#cancelModal">
+                                    Cancel Event
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        </section>
+    </main>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Update Confirmed </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">Your update was successful!</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close </button>
+                    <a href="./index.html" class="btn btn-primary">Go Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert">This cannot be undone. Be sure before continuing.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Go Back
+                    </button>
+                    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-dismiss="modal"
+                        data-bs-target="#cancelConfirmModal">Cancel
+                        Event</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-labelledby="cancelConfirmModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelConfirmModalLabel">Cancellation Confirmed</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">Your cancellation was successful!</div>
+                </div>
+                <div class="modal-footer">
+                    <a href="./index.html" class="btn btn-primary">Go Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   {% endblock %}

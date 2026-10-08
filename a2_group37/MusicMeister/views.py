@@ -9,3 +9,15 @@ def index():
 @main_bp.route('/details')
 def details():
     return render_template('details.html')
+
+@main_bp.route('/edit-event')
+def edit_event():
+    return render_template('edit-event.html')
+
+@main_bp.route('/create-event')
+def create_event():
+    return render_template('create-event.html')
+
+@main_bp.route('/orders')
+def orders():
+    return render_template('orders.html')
