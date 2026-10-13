@@ -1,21 +1,32 @@
 {% include "base.html" %}
 {% from "bootstrap5/form.html" import render_form %}
-{% block body %}
 
-<div class="page-header">
-    <h4>{{heading}}</h4>
+{% block styles %}
+    <link href="./static/style/user.css" rel="stylesheet">   
+{% endblock %}
+
+{% block content %}
+<div class = "user-page container">
+    <div class="user-card">
+        <div class="page-header">
+            <h4>{{heading}}</h4>
+        </div>
+
+        <!-- Form rendering is simple and easy if using WTForms and Bootstrap -->
+        <div class="user-form">
+            {{render_form(form)}}
+        </div>
+    </div>
 </div>
-
-<!-- Form rendering is simple and easy if using WTForms and Bootstrap -->
-<div class="col-md-6">
-    {{render_form(form)}}
-</div>
-
 <!-- When you have Login form, then show the user a link to register -->
 {% if heading == 'Login' %}
-<div class="col-md-4">
-    <p>New user? <a href="{{url_for('auth.register')}}">Click here</a> to register.</p>
+<div class="user-link">
+    <p>New user? <a href="{{url_for('auth.register')}}">Sign up here.</a></p>
 </div>
+{% elif heading == 'Register' %}
+    <div class="user-link">
+        <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in here</a>.</p>
+    </div>
 {% endif %}
 
 {% endblock %}

@@ -45,13 +45,17 @@ def register():
     if register_form.validate_on_submit():
         email = register_form.email.data
         password = register_form.password.data
+        first_name = register_form.first_name.data
+        surname = register_form.surname.data
+        contact_number = register_form.contact_number.data
+        address = register_form.address.data
 
         existing_user = db.session.scalar(
             db.select(User).where(User.email == email)
         )
 
         if existing_user:
-            flash('That username is already taken')
+            flash('Email is already registered.')
        
         else:
             hashed_password = generate_password_hash(
@@ -60,14 +64,17 @@ def register():
 
             new_user = User(
                 email=email,
-                password_hash=hashed_password
-            )
+                password_hash=hashed_password,
+                first_name = first_name,
+                surname = surname,
+                contact_number = contact_number,
+                address = address)
 
             db.session.add(new_user)
             db.session.commit()
 
-            flash('Registration successful. You can now log in.')
-            return redirect(url_for('auth.login'))
+            flash('Registration successful.')
+            return redirect(url_for('main.index'))
 
     return render_template(
         'user.html',
