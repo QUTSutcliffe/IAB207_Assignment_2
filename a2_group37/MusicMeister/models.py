@@ -54,5 +54,5 @@ class Order(db.Model):
     ticket_quantity = db.Column(db.Integer)
     time_ordered = db.Column(db.DateTime)
     
-    orderer = db.Column(db.Integer, db.ForeignKey("user.id"))
+    order_owner = db.Column(db.Integer, db.ForeignKey("user.id"))
     for_event = db.Column(db.Integer, db.ForeignKey("events.id"))
