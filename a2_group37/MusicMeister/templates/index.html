@@ -92,142 +92,22 @@
             <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
 
                 <h1>All Events</h1>
+                {% for event in events %}
                 <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
-
                     <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-anthonyshkraba-production-8040838.jpg" class="card-img-top"
+                        <img src="{{event.image_path}}" class="card-img-top"
                             alt="Rock event">
                         <div class="card-body">
-                            <h5 class="card-title">Thunder Road</h5>
+                            <h5 class="card-title">{{event.name}}</h5>
                             <small>Status:</small>
-                            <span class="badge bg-success">Open</span>
-                            <p class="card-text">An explosive night of classic and modern rock.</p>
-                            <p class="card-text"><strong>Genre:</strong> Rock</p>
+                            <span class="badge bg-success">{{event.status}}</span>
+                            <p class="card-text">{{event.description}}</p>
+                            <p class="card-text"><strong>Genre: </strong>{{event.category}}</p>
                             <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
                         </div>
                     </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-dimkidama-14357234.jpg" class="card-img-top" alt="Country event">
-                        <div class="card-body">
-                            <h5 class="card-title">Country Roads Live</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-warning text-dark">Inactive</span>
-                            <p class="card-text">A night of country music, acoustic guitars and good times.</p>
-                            <p class="card-text"><strong>Genre:</strong> Country</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-eugene-bolshem-722706948-33284931.jpg" class="card-img-top"
-                            alt="Hip Hop event">
-                        <div class="card-body">
-                            <h5 class="card-title">Urban Beats</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-secondary">Sold Out</span>
-                            <p class="card-text">Live hip hop performances from local and international artists.</p>
-                            <p class="card-text"><strong>Genre:</strong> Hip Hop</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-gerald-pra-672106167-18368848.jpg" class="card-img-top"
-                            alt="Pop event">
-                        <div class="card-body">
-                            <h5 class="card-title">Pop Explosion</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-danger">Cancelled</span>
-                            <p class="card-text">A high-energy celebration of today's biggest pop hits.</p>
-                            <p class="card-text"><strong>Genre:</strong> Pop</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-gustavo-fring-3984826.jpg" class="card-img-top" alt="EDM event">
-                        <div class="card-body">
-                            <h5 class="card-title">Electric Nights</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-success">Open</span>
-                            <p class="card-text">A massive night of electronic dance music and live DJs.</p>
-                            <p class="card-text"><strong>Genre:</strong> EDM</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-gustavo-fring-3984830.jpg" class="card-img-top" alt="Jazz event">
-                        <div class="card-body">
-                            <h5 class="card-title">Smooth Sessions</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-secondary">Sold Out</span>
-                            <p class="card-text">An intimate evening featuring talented jazz musicians.</p>
-                            <p class="card-text"><strong>Genre:</strong> Jazz</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-manu-gvzman-2159425384-36064767.jpg" class="card-img-top"
-                            alt="Classical event">
-                        <div class="card-body">
-                            <h5 class="card-title">Symphony Under the Stars</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-success">Open</span>
-                            <p class="card-text">Experience timeless classical compositions performed live.</p>
-                            <p class="card-text"><strong>Genre:</strong> Classical</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-paul-rod-288171540-15602520.jpg" class="card-img-top"
-                            alt="Latin event">
-                        <div class="card-body">
-                            <h5 class="card-title">Latin Fiesta</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-warning text-dark">Inactive</span>
-                            <p class="card-text">A vibrant celebration of Latin music, dance and culture.</p>
-                            <p class="card-text"><strong>Genre:</strong> Latin</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <img src="./static/img/pexels-taina-medeiros-549215533-29388207.jpg" class="card-img-top"
-                            alt="Reggae event">
-                        <div class="card-body">
-                            <h5 class="card-title">Island Vibes</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-danger">Cancelled</span>
-                            <p class="card-text">Relaxed reggae rhythms and live performances all night.</p>
-                            <p class="card-text"><strong>Genre:</strong> Reggae</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <a href="edit-event.html" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2">
-                            Edit
-                        </a>
-                        <img src="./static/img/pexels-thatguycraig000-1588075.jpg" class="card-img-top"
-                            alt="Rock1 event">
-                        <div class="card-body">
-                            <h5 class="card-title">Midnight Riot</h5>
-                            <small>Status:</small>
-                            <span class="badge bg-success">Open</span>
-                            <p class="card-text">A loud and energetic night of hard rock and live guitar performances.
-                            </p>
-                            <p class="card-text"><strong>Genre:</strong> Rock</p>
-                            <a href="{{ url_for('main.details') }}" class="btn btn-primary">See Details</a>
-                        </div>
-                    </div>
-
-
-
                 </div>
+                {% endfor %}
 
             </div>
 

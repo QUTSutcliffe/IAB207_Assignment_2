@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template
 
+from . import db
+from .models import Event
+
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    return render_template('index.html')
+    events = Event.query.all() #getting all events from db
+    return render_template('index.html', events = events)
 
 @main_bp.route('/details')
 def details():
