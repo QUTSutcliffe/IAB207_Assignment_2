@@ -1,5 +1,5 @@
-   {% extends "base.html" %}
-
+    {% extends "base.html" %}
+    {% from "bootstrap5/form.html" import render_form %}
       {% block styles %}
       <link href="./static/style/index.css" rel="stylesheet">
       {% endblock %}
@@ -12,17 +12,15 @@
         </a>
         <div class="row g-5">
             <div class="col-12 col-lg-6">
-                <img src="./static/img/pexels-anthonyshkraba-production-8040838.jpg"
-                    class="img-fluid rounded shadow w-100" alt="Thunder Road performing live">
+                <img src="{{ url_for('static', filename=event.image_path.replace('./static/', '')) }}"
+                    class="img-fluid rounded shadow w-100"
+                    alt="{{ event.name }}">
             </div>
             <div class="col-12 col-lg-6">
-                <h1 class="mb-3"> Thunder Road </h1>
-                <p class="mb-4"> <strong>Event Status:</strong> <span class="badge bg-success"> Open </span> </p>
+                <h1 class="mb-3">{{ event.name }}</h1>
+                <p class="mb-4"> <strong>Event Status:</strong> <span class="badge bg-success">{{ event.status }}</span> </p>
 
-                <p class="lead">
-                    An explosive night of classic and modern rock featuring loud guitar performances,
-                    energetic live music and performances from Thunder Road.
-                </p>
+                <p class="lead">{{ event.description }}</p>
                 <hr>
                 <h2 class="mb-4"> Event Information </h2>
                 <div class="row mb-3">
@@ -76,20 +74,20 @@
 
                 <h2 class="mb-4"> Ticket Information </h2>
                 <div class="row mb-3">
-                    <div class="col-sm-6"> <strong>Tickets Required:</strong> </div>
-                    <div class="col-sm-6"> Yes </div>
+                    <div class="col-sm-6"><strong>Ticket Price:</strong></div>
+                    <div class="col-sm-6">{{ (event.price) }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-6"> <strong>Total Ticket Capacity:</strong> </div>
-                    <div class="col-sm-6"> 200 </div>
+                    <div class="col-sm-6">{{ event.capacity }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-6"> <strong>Tickets Booked:</strong> </div>
-                    <div class="col-sm-6"> 125 </div>
+                    <div class="col-sm-6">{{ booked }}</div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-sm-6"> <strong>Tickets Available:</strong> </div>
-                    <div class="col-sm-6"> <span class="badge bg-success fs-6"> 75 tickets remaining </span> </div>
+                    <div class="col-sm-6"> <span class="badge bg-success fs-6">{{ available }} tickets remaining </span> </div>
                 </div>
                 <hr>
                 <section>
@@ -97,22 +95,9 @@
                     <div class="alert alert-success"> You are logged in and can book tickets for this event. </div>
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <form>
-                                <div class="mb-3">
-                                    <label for="ticketQuantity" class="form-label">
-                                        Number of Tickets
-                                    </label>
-                                    <input type="number" class="form-control" id="ticketQuantity" min="1" max="10"
-                                        value="1" required>
-                                    <div class="form-text">
-                                        You can book up to 10 tickets, depending on availability.
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                                    data-bs-target="#bookingModal">
-                                    Book Tickets
-                                </button>
-                            </form>
+                            <div class="user-form">
+                                {{render_form(form)}}
+                            </div>
                         </div>
                     </div>
                 </section>
