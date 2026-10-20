@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app
 from flask_login import login_required, current_user
 from . import db
-from .forms import BookingForm, CreateEventForm
-from .models import Event, Order
+from .forms import BookingForm, CreateEventForm, CommentForm
+from .models import Event, Order, Comment, User
 from sqlalchemy import func
 from flask_login import current_user
 from datetime import datetime
@@ -19,6 +19,7 @@ def index():
 @main_bp.route('/details/<int:event_id>', methods=['GET', 'POST'])
 def details(event_id):
     event = db.session.get(Event, event_id)
+    comments = Comment.query.filter_by(commented_event=event_id).all()
     if event is None:
         flash('Event does not exist.')
         return redirect(url_for('main.index'))
@@ -30,6 +31,30 @@ def details(event_id):
     available = max(event.capacity - booked, 0)
     
     booking_form = BookingForm()
+    
+    comment_form = CommentForm()
+    comment_text = comment_form.comment_text.data
+        
+    if comment_form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash('Please log in to leave comments.')
+            return redirect(url_for('auth.login'))
+        if comment_text is None:
+            flash('Please make sure comment has text.')
+        elif len(comment_text) < 5:
+            flash('Plase make sure comment has more than 5 characters.')
+        else:
+            new_comment = Comment(
+                text=comment_form.comment_text.data,
+                datetime=datetime.now(),
+                owner_id=current_user.id,
+                commented_event=event.id
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+
+            flash('Comment successful.')
+            return redirect(url_for('main.details', event_id=event.id))
 
     if booking_form.validate_on_submit():
      if not current_user.is_authenticated:
@@ -65,6 +90,8 @@ def details(event_id):
         'details.html',
         event=event,
         form=booking_form,
+        comment_form=comment_form,
+        comments=comments,
         booked=booked,
         available=available
     )

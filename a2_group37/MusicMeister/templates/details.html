@@ -109,50 +109,34 @@
     <section class="mt-5">
         <hr class="mb-5">
         <h2 class="mb-4"> Comments </h2>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <h5 class="card-title"> Jordan Smith </h5>
-                    <small class="text-muted">
-                        3 September 2026, 4:30 PM
-                    </small>
-                </div>
-                <p class="card-text mb-0">
-                    Really looking forward to seeing Thunder Road! I saw them perform last
-                    year and they were amazing.
-                </p>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <h5 class="card-title"> Sarah Wilson </h5>
-                    <small class="text-muted">
-                        1 September 2026, 7:15 PM
-                    </small>
-                </div>
-                <p class="card-text mb-0">
-                    Does anyone know what time the main performance starts?
-                </p>
-            </div>
-        </div>
-
+        {% if current_user.is_authenticated %}
         <div class="card mt-4 shadow-sm">
             <div class="card-body">
                 <h3 class="mb-3"> Leave a Comment </h3>
-                <div class="alert alert-info"> You must be logged in to post a comment. </div>
-                <form>
-                    <div class="mb-3">
-                        <label for="commentText" class="form-label">Your Comment</label>
-                        <textarea class="form-control" id="commentText" rows="4" placeholder="Write your comment..."
-                            required></textarea>
-                    </div>
-                    <button type="button" class="btn btn-primary">Post Comment</button>
-                </form>
+                <div class="user-form">
+                    {{ render_form(comment_form) }}
+                </div>
             </div>
         </div>
+        {% else %}
+        <div class="alert alert-info"> You must be logged in to post a comment. </div>
+        {% endif %}
+
+        {% for comment in comments|reverse %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title"> {{ comment.author.first_name }} {{ comment.author.surname }} </h5>
+                    <small class="text-muted">
+                        {{ comment.datetime.strftime('%e/%m/%Y %l:%M %p') }}
+                    </small>
+                </div>
+                <p class="card-text mb-0">
+                    {{ comment.text }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
     </section>
 </main>
 

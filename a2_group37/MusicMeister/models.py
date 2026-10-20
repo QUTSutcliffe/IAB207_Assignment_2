@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
     
     events = db.relationship("Event", backref="owner")
     orders = db.relationship("Order", backref="user")
+    comments = db.relationship("Comment", backref="author")
     
 class Event(db.Model):
     __tablename__ = "events"

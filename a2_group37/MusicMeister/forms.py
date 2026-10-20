@@ -50,3 +50,10 @@ class CreateEventForm(FlaskForm):
     def validate_endtime(self, field):
         if self.datetime.data and field.data <= self.datetime.data:
             raise ValidationError("End time must be after the start time")
+
+# commenting
+class CommentForm(FlaskForm):
+    comment_text = TextAreaField("Write your comment", validators=[InputRequired(), Length(max=1000)])
+    
+    # post comment button
+    submit = SubmitField("Post Comment")
