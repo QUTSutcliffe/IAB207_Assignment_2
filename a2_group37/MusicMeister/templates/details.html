@@ -1,182 +1,192 @@
-    {% extends "base.html" %}
-    {% from "bootstrap5/form.html" import render_form %}
-      {% block styles %}
-      <link href="./static/style/index.css" rel="stylesheet">
-      {% endblock %}
+{% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+{% block styles %}
+<link href="./static/style/index.css" rel="stylesheet">
+{% endblock %}
 
-   {% block content %}
+{% block content %}
 
-   <main class="container my-5">
-        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary mb-4">
-            Back to Events
-        </a>
-        <div class="row g-5">
-            <div class="col-12 col-lg-6">
-                <img src="{{ url_for('static', filename=event.image_path.replace('./static/', '')) }}"
-                    class="img-fluid rounded shadow w-100"
-                    alt="{{ event.name }}">
-            </div>
-            <div class="col-12 col-lg-6">
-                <h1 class="mb-3">{{ event.name }}</h1>
-                <p class="mb-4"> <strong>Event Status:</strong> <span class="badge bg-success">{{ event.status }}</span> </p>
-
-                <p class="lead">{{ event.description }}</p>
-                <hr>
-                <h2 class="mb-4"> Event Information </h2>
-                <div class="row mb-3">
-                    <div class="col-sm-4"> <strong>Venue:</strong> </div>
-                    <div class="col-sm-8"> The Underground Music Hall </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4"> <strong>Location:</strong> </div>
-                    <div class="col-sm-8"> Brisbane, Queensland </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4"> <strong>Date:</strong> </div>
-                    <div class="col-sm-8"> Saturday, 20 September 2026 </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4"> <strong>Start Time:</strong> </div>
-                    <div class="col-sm-8"> 7:00 PM </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4"> <strong>End Time:</strong> </div>
-                    <div class="col-sm-8"> 11:00 PM </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4"> <strong>Genre:</strong> </div>
-                    <div class="col-sm-8"> Rock </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4"> <strong>Planned Program:</strong> </div>
-                    <div class="col-sm-8">
-                        <ul class="mb-0">
-                            <li>Doors open at 6:30 PM</li>
-                            <li>Opening local artist</li>
-                            <li>Thunder Road live performance</li>
-                            <li>Encore performance</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-sm-4"><strong>Program Runtime:</strong></div>
-                    <div class="col-sm-8">Approximately 4 hours</div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-sm-4"> <strong>Acknowledgement: </strong> </div>
-                    <div class="col-sm-8">
-                        We acknowledge the Traditional Custodians of the land on which this event
-                        takes place and pay respect to Elders past and present.
-                    </div>
-                </div>
-
-                <hr>
-
-                <h2 class="mb-4"> Ticket Information </h2>
-                <div class="row mb-3">
-                    <div class="col-sm-6"><strong>Ticket Price:</strong></div>
-                    <div class="col-sm-6">{{ (event.price) }}</div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-6"> <strong>Total Ticket Capacity:</strong> </div>
-                    <div class="col-sm-6">{{ event.capacity }}</div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-6"> <strong>Tickets Booked:</strong> </div>
-                    <div class="col-sm-6">{{ booked }}</div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-sm-6"> <strong>Tickets Available:</strong> </div>
-                    <div class="col-sm-6"> <span class="badge bg-success fs-6">{{ available }} tickets remaining </span> </div>
-                </div>
-                <hr>
-                <section>
-                    <h2 class="mb-3"> Book Tickets </h2>
-                    <div class="alert alert-success"> You are logged in and can book tickets for this event. </div>
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="user-form">
-                                {{render_form(form)}}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+<main class="container my-5">
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary mb-4">
+        Back to Events
+    </a>
+    <div class="row g-5">
+        <div class="col-12 col-lg-6">
+            <img src="{{ url_for('static', filename=event.image_path.replace('./static/', '')) }}"
+                class="img-fluid rounded shadow w-100" alt="{{ event.name }}">
         </div>
+        <div class="col-12 col-lg-6">
+            <h1 class="mb-3">{{ event.name }}</h1>
+            <p class="mb-4"> <strong>Event Status:</strong>
+                {% if event.status == 'Open' %}
+                <span class="badge bg-success">{{ event.status }}</span>
+                {% elif event.status == 'Inactive' %}
+                <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                {% elif event.status == 'Sold Out' %}
+                <span class="badge bg-secondary">{{ event.status }}</span>
+                {% elif event.status == 'Cancelled' %}
+                <span class="badge bg-danger">{{ event.status }}</span>
+                {% endif %}
+            </p>
 
-        <section class="mt-5">
-            <hr class="mb-5">
-            <h2 class="mb-4"> Comments </h2>
-
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title"> Jordan Smith </h5>
-                        <small class="text-muted">
-                            3 September 2026, 4:30 PM
-                        </small>
-                    </div>
-                    <p class="card-text mb-0">
-                        Really looking forward to seeing Thunder Road! I saw them perform last
-                        year and they were amazing.
-                    </p>
+            <p class="lead">{{ event.description }}</p>
+            <hr>
+            <h2 class="mb-4"> Event Information </h2>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Venue:</strong> </div>
+                <div class="col-sm-8"> The Underground Music Hall </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Location:</strong> </div>
+                <div class="col-sm-8"> Brisbane, Queensland </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Date:</strong> </div>
+                <div class="col-sm-8"> Saturday, 20 September 2026 </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Start Time:</strong> </div>
+                <div class="col-sm-8"> 7:00 PM </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>End Time:</strong> </div>
+                <div class="col-sm-8"> 11:00 PM </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Genre:</strong> </div>
+                <div class="col-sm-8"> Rock </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Planned Program:</strong> </div>
+                <div class="col-sm-8">
+                    <ul class="mb-0">
+                        <li>Doors open at 6:30 PM</li>
+                        <li>Opening local artist</li>
+                        <li>Thunder Road live performance</li>
+                        <li>Encore performance</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-4"><strong>Program Runtime:</strong></div>
+                <div class="col-sm-8">Approximately 4 hours</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-4"> <strong>Acknowledgement: </strong> </div>
+                <div class="col-sm-8">
+                    We acknowledge the Traditional Custodians of the land on which this event
+                    takes place and pay respect to Elders past and present.
                 </div>
             </div>
 
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title"> Sarah Wilson </h5>
-                        <small class="text-muted">
-                            1 September 2026, 7:15 PM
-                        </small>
-                    </div>
-                    <p class="card-text mb-0">
-                        Does anyone know what time the main performance starts?
-                    </p>
+            <hr>
+
+            <h2 class="mb-4"> Ticket Information </h2>
+            <div class="row mb-3">
+                <div class="col-sm-6"><strong>Ticket Price:</strong></div>
+                <div class="col-sm-6">{{ (event.price) }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6"> <strong>Total Ticket Capacity:</strong> </div>
+                <div class="col-sm-6">{{ event.capacity }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6"> <strong>Tickets Booked:</strong> </div>
+                <div class="col-sm-6">{{ booked }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-6"> <strong>Tickets Available:</strong> </div>
+                <div class="col-sm-6"> <span class="badge bg-success fs-6">{{ available }} tickets remaining </span>
                 </div>
             </div>
-
-            <div class="card mt-4 shadow-sm">
-                <div class="card-body">
-                    <h3 class="mb-3"> Leave a Comment </h3>
-                    <div class="alert alert-info"> You must be logged in to post a comment. </div>
-                    <form>
-                        <div class="mb-3">
-                            <label for="commentText" class="form-label">Your Comment</label>
-                            <textarea class="form-control" id="commentText" rows="4" placeholder="Write your comment..."
-                                required></textarea>
+            <hr>
+            <section>
+                <h2 class="mb-3"> Book Tickets </h2>
+                <div class="alert alert-success"> You are logged in and can book tickets for this event. </div>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="user-form">
+                            {{render_form(form)}}
                         </div>
-                        <button type="button" class="btn btn-primary">Post Comment</button>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </section>
-    </main>
-
-    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="bookingModalLabel"> Booking Confirmed </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success">Your booking was successful!</div>
-                    <p> <strong>Event:</strong>Thunder Road</p>
-                    <p> <strong>Tickets Booked:</strong>Selected ticket quantity</p>
-                    <p> <strong>Order Reference:</strong>TR-2026-001245</p>
-                    <p> <strong>Booking Status:</strong>
-                        <span class="badge bg-success"> Confirmed </span>
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close </button>
-                    <a href="{{ url_for('main.orders') }}" class="btn btn-primary">View Booking History </a>
-                </div>
-            </div>
+            </section>
         </div>
     </div>
 
-   {% endblock %}
+    <section class="mt-5">
+        <hr class="mb-5">
+        <h2 class="mb-4"> Comments </h2>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title"> Jordan Smith </h5>
+                    <small class="text-muted">
+                        3 September 2026, 4:30 PM
+                    </small>
+                </div>
+                <p class="card-text mb-0">
+                    Really looking forward to seeing Thunder Road! I saw them perform last
+                    year and they were amazing.
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title"> Sarah Wilson </h5>
+                    <small class="text-muted">
+                        1 September 2026, 7:15 PM
+                    </small>
+                </div>
+                <p class="card-text mb-0">
+                    Does anyone know what time the main performance starts?
+                </p>
+            </div>
+        </div>
+
+        <div class="card mt-4 shadow-sm">
+            <div class="card-body">
+                <h3 class="mb-3"> Leave a Comment </h3>
+                <div class="alert alert-info"> You must be logged in to post a comment. </div>
+                <form>
+                    <div class="mb-3">
+                        <label for="commentText" class="form-label">Your Comment</label>
+                        <textarea class="form-control" id="commentText" rows="4" placeholder="Write your comment..."
+                            required></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary">Post Comment</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel"> Booking Confirmed </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success">Your booking was successful!</div>
+                <p> <strong>Event:</strong>Thunder Road</p>
+                <p> <strong>Tickets Booked:</strong>Selected ticket quantity</p>
+                <p> <strong>Order Reference:</strong>TR-2026-001245</p>
+                <p> <strong>Booking Status:</strong>
+                    <span class="badge bg-success"> Confirmed </span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close </button>
+                <a href="{{ url_for('main.orders') }}" class="btn btn-primary">View Booking History </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
