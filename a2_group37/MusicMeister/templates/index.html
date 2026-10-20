@@ -95,6 +95,11 @@
                 {% for event in events %}
                 <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
                     <div class="card mx-auto" style="width: 18rem;">
+                        {% if event.owner_id == current_user.id %}
+                        <a href="{{ url_for('main.edit_event', event_id=event.id) }}" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2">
+                            Edit
+                        </a>
+                        {% endif %}
                         <img src="{{event.image_path}}" class="card-img-top"
                             alt="Rock event">
                         <div class="card-body">
@@ -424,27 +429,37 @@
                 <p class="text-muted">
                     View the events you have created.
                 </p>
+                {% for event in events %}
+                {% if event.owner_id == current_user.id %}
                 <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
-
                     <div class="card mx-auto" style="width: 18rem;">
-                        <a href="edit-event.html" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2">
+                        {% if event.owner_id == current_user.id %}
+                        <a href="{{ url_for('main.edit_event', event_id=event.id) }}" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2">
                             Edit
                         </a>
-                        <img src="./static/img/pexels-thatguycraig000-1588075.jpg" class="card-img-top"
-                            alt="Rock1 event">
+                        {% endif %}
+                        <img src="{{event.image_path}}" class="card-img-top"
+                            alt="Rock event">
                         <div class="card-body">
-                            <h5 class="card-title">Midnight Riot</h5>
+                            <h5 class="card-title">{{event.name}}</h5>
                             <small>Status:</small>
-                            <span class="badge bg-success">Open</span>
-                            <p class="card-text">A loud and energetic night of hard rock and live guitar performances.
-                            </p>
-                            <p class="card-text"><strong>Genre:</strong> Rock</p>
-
-                            <!-- TODO: Implement the user's own events and details link later. -->
-
+                            {% if event.status == 'Open' %}
+                                <span class="badge bg-success">{{ event.status }}</span>
+                            {% elif event.status == 'Inactive' %}
+                                <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                            {% elif event.status == 'Sold Out' %}
+                                <span class="badge bg-secondary">{{ event.status }}</span>
+                            {% elif event.status == 'Cancelled' %}
+                                <span class="badge bg-danger">{{ event.status }}</span>
+                            {% endif %}
+                            <p class="card-text">{{event.description}}</p>
+                            <p class="card-text"><strong>Genre: </strong>{{event.category}}</p>
+                            <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary">See Details</a>
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% endfor %}
 
             </div>
 

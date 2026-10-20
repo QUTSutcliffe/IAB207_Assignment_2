@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app
 from flask_login import login_required, current_user
 from . import db
-from .forms import BookingForm, CreateEventForm, CommentForm
+from .forms import BookingForm, EventForm, CommentForm
 from .models import Event, Order, Comment, User
 from sqlalchemy import func
 from flask_login import current_user
@@ -96,14 +96,49 @@ def details(event_id):
         available=available
     )
 
-@main_bp.route('/edit-event')
-def edit_event():
-    return render_template('edit-event.html')
+@main_bp.route('/edit-event/<int:event_id>', methods=['GET', 'POST'])
+@login_required
+def edit_event(event_id):
+    event = db.session.get(Event, event_id)
+    if event is None:
+        abort(404)
+
+    form = EventForm(obj=event)
+    try:
+        if form.validate_on_submit():
+            form.populate_obj(event)
+            db.session.commit()
+            flash('Your event was updated successfully!', 'success')
+            return redirect(url_for('main.index'))
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception('Failed to cancel event')
+        flash('Unable to edit the event. Please try again.', 'error')
+    return render_template('edit-event.html', form=form, event=event)
+
+@main_bp.route('/cancel-event/<int:event_id>', methods=['POST'])
+@login_required
+def cancel_event(event_id):
+    event = db.session.get(Event, event_id)
+
+    if event is None:
+        abort(404)
+
+    try:
+        event.status = 'Cancelled'
+        db.session.commit()
+        flash('Your event was cancelled.', 'success')
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception('Failed to cancel event')
+        flash('Unable to cancel the event. Please try again.', 'error')
+
+    return redirect(url_for('main.index'))
 
 @main_bp.route('/create-event', methods=['GET', 'POST'])
 @login_required
 def create_event():
-    form = CreateEventForm()
+    form = EventForm()
     if form.validate_on_submit():
         existing = db.session.scalar(db.select(Event).where(Event.name == form.name.data))
         if existing:

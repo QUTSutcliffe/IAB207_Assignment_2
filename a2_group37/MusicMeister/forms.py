@@ -29,8 +29,8 @@ class BookingForm(FlaskForm):
      ticket_quantity = IntegerField("Number of Tickets", validators=[InputRequired(), NumberRange(min=1, max=10)], default=1)
      submit = SubmitField("Book Tickets")
 
-# create event form
-class CreateEventForm(FlaskForm):
+#  event form to be used for creating and editing events
+class EventForm(FlaskForm):
     name = StringField("Event Name", validators=[InputRequired(), Length(max=64)])
     description = TextAreaField("Description", validators=[InputRequired(), Length(max=255)])
     venue = StringField("Venue", validators=[InputRequired(), Length(max=64)])
@@ -44,7 +44,7 @@ class CreateEventForm(FlaskForm):
     capacity = IntegerField("Total Ticket Capacity", validators=[InputRequired(), NumberRange(min=1)])
     image = FileField("Event Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'webp'], "Images only")])
 # submit button
-    submit = SubmitField("Create Event")
+    submit = SubmitField("Submit Event")
  
 # end time must be after the start time
     def validate_endtime(self, field):
