@@ -72,7 +72,7 @@ def details(event_id):
             flash('There are not enough tickets available.')
         else:
             new_order = Order(
-                price=float(event.price.replace('$', '')) * ticket_quantity,
+                price=float(event.price) * ticket_quantity,
                 ticket_quantity=ticket_quantity,
                 time_ordered=datetime.now(),
                 order_owner=current_user.id,
