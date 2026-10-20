@@ -34,48 +34,36 @@
             <h2 class="mb-4"> Event Information </h2>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Venue:</strong> </div>
-                <div class="col-sm-8"> The Underground Music Hall </div>
+                <div class="col-sm-8"> {{ event.venue}} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Location:</strong> </div>
-                <div class="col-sm-8"> Brisbane, Queensland </div>
+                <div class="col-sm-8"> {{ event.location }} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Date:</strong> </div>
-                <div class="col-sm-8"> Saturday, 20 September 2026 </div>
+                <div class="col-sm-8"> {{ event.datetime.strftime('%F') }} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Start Time:</strong> </div>
-                <div class="col-sm-8"> 7:00 PM </div>
+                <div class="col-sm-8"> {{ event.datetime.strftime('%l:%M %p') }} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>End Time:</strong> </div>
-                <div class="col-sm-8"> 11:00 PM </div>
+                <div class="col-sm-8"> {{ event.endtime.strftime('%l:%M %p') }} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Genre:</strong> </div>
-                <div class="col-sm-8"> Rock </div>
+                <div class="col-sm-8"> {{ event.category }} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Planned Program:</strong> </div>
-                <div class="col-sm-8">
-                    <ul class="mb-0">
-                        <li>Doors open at 6:30 PM</li>
-                        <li>Opening local artist</li>
-                        <li>Thunder Road live performance</li>
-                        <li>Encore performance</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-sm-4"><strong>Program Runtime:</strong></div>
-                <div class="col-sm-8">Approximately 4 hours</div>
+                <div class="col-sm-8"> {{ event.program }} </div>
             </div>
             <div class="row mb-4">
                 <div class="col-sm-4"> <strong>Acknowledgement: </strong> </div>
                 <div class="col-sm-8">
-                    We acknowledge the Traditional Custodians of the land on which this event
-                    takes place and pay respect to Elders past and present.
+                    {{ event.acknowledgement }}
                 </div>
             </div>
 
@@ -84,7 +72,7 @@
             <h2 class="mb-4"> Ticket Information </h2>
             <div class="row mb-3">
                 <div class="col-sm-6"><strong>Ticket Price:</strong></div>
-                <div class="col-sm-6">{{ (event.price) }}</div>
+                <div class="col-sm-6">${{ event.price }}</div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-6"> <strong>Total Ticket Capacity:</strong> </div>
@@ -102,6 +90,7 @@
             <hr>
             <section>
                 <h2 class="mb-3"> Book Tickets </h2>
+                {% if current_user.is_authenticated %}
                 <div class="alert alert-success"> You are logged in and can book tickets for this event. </div>
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -110,6 +99,9 @@
                         </div>
                     </div>
                 </div>
+                {% else %}
+                <div class="alert alert-warning"> Log in to book tickets for this event. </div>
+                {% endif %}
             </section>
         </div>
     </div>
