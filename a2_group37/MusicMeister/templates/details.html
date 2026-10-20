@@ -7,9 +7,16 @@
 {% block content %}
 
 <main class="container my-5">
-    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary mb-4">
-        Back to Events
-    </a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+            Back to Events
+        </a>
+        {% if event.owner_id == current_user.id %}
+        <a href="{{ url_for('main.edit_event', event_id=event.id) }}" class="btn btn-primary">
+            Edit
+        </a>
+        {% endif %}
+    </div>
     <div class="row g-5">
         <div class="col-12 col-lg-6">
             <img src="{{ url_for('static', filename=event.image_path.replace('./static/', '')) }}"
