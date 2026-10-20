@@ -92,8 +92,9 @@
             <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
 
                 <h1>All Events</h1>
-                {% for event in events %}
+                
                 <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+                    {% for event in events %}
                     <div class="card mx-auto" style="width: 18rem;">
                         {% if event.owner_id == current_user.id %}
                         <a href="{{ url_for('main.edit_event', event_id=event.id) }}" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2">
@@ -119,8 +120,9 @@
                             <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary">See Details</a>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                
 
             </div>
 
