@@ -1,10 +1,13 @@
-from flask import Blueprint, render_template, flash, request, url_for, redirect
+from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app
+from flask_login import login_required, current_user
 from . import db
-from .forms import BookingForm
+from .forms import BookingForm, CreateEventForm
 from .models import Event, Order
 from sqlalchemy import func
 from flask_login import current_user
 from datetime import datetime
+import uuid
+import os
 
 main_bp = Blueprint('main', __name__)
 
@@ -70,9 +73,43 @@ def details(event_id):
 def edit_event():
     return render_template('edit-event.html')
 
-@main_bp.route('/create-event')
+@main_bp.route('/create-event', methods=['GET', 'POST'])
+@login_required
 def create_event():
-    return render_template('create-event.html')
+    form = CreateEventForm()
+    if form.validate_on_submit():
+        existing = db.session.scalar(db.select(Event).where(Event.name == form.name.data))
+        if existing:
+            form.name.errors.append("An event with this name already exists")
+            return render_template('create-event.html', form=form)
+ 
+        image_path = "./static/img/band.jpg"
+        file = form.image.data
+        filename = str(uuid.uuid1())
+        file.save(os.path.join(current_app.root_path, 'static', 'img', filename))
+        image_path = f"./static/img/{filename}"
+ 
+        event = Event(
+            name=form.name.data,
+            description=form.description.data,
+            image_path=image_path,
+            venue=form.venue.data,
+            location=form.location.data,
+            datetime=form.datetime.data,
+            endtime=form.endtime.data,
+            category=form.category.data,
+            program=form.program.data,
+            price=form.price.data,
+            capacity=form.capacity.data,
+            status="Open",
+            acknowledgement=form.acknowledgement.data,
+            owner_id=current_user.id
+        )
+        db.session.add(event)
+        db.session.commit()
+        flash("Your event was created successfully!", "success")
+        return redirect(url_for('main.index'))
+    return render_template('create-event.html', form=form)
 
 @main_bp.route('/orders')
 def orders():
