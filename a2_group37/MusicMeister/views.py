@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 from .forms import BookingForm, EventForm, CommentForm
 from .models import Event, Order, Comment, User
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from flask_login import current_user
 from datetime import datetime
 import uuid
@@ -13,8 +13,25 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    events = Event.query.all() #getting all events from db
-    return render_template('index.html', events = events)
+    # Apply user-selected filters on the server (no custom JavaScript required).
+    search = request.args.get('search', '', type=str).strip()
+    status = request.args.get('status', '', type=str).strip()
+    category = request.args.get('category', '', type=str).strip()
+    query = Event.query
+    if search:
+        term = f'%{search}%'
+        query = query.filter(or_(Event.name.ilike(term),
+                                 Event.description.ilike(term),
+                                 Event.venue.ilike(term),
+                                 Event.location.ilike(term)))
+    if status:
+        query = query.filter(Event.status == status)
+    if category:
+        query = query.filter(Event.category == category)
+    events = query.order_by(Event.datetime.asc()).all()
+    categories = [name for (name,) in db.session.query(Event.category).distinct().order_by(Event.category).all() if name]
+    return render_template('index.html', events=events, search=search,
+                           status=status, category=category, categories=categories)
 
 @main_bp.route('/details/<int:event_id>', methods=['GET', 'POST'])
 def details(event_id):
