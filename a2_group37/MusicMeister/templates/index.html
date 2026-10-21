@@ -2,7 +2,7 @@
    {% extends "base.html" %}
 
    {% block styles %}
-    <link href="./static/style/index.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style/index.css') }}" rel="stylesheet">
     {% endblock %}
 
    {% block content %}

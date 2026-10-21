@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "bootstrap5/form.html" import render_form %}
 {% block styles %}
-<link href="./static/style/index.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='style/index.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -53,11 +53,11 @@
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Start Time:</strong> </div>
-                <div class="col-sm-8"> {{ event.datetime.strftime('%l:%M %p') }} </div>
+                <div class="col-sm-8"> {{ event.datetime.strftime('%I:%M %p').lstrip('0') }} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>End Time:</strong> </div>
-                <div class="col-sm-8"> {{ event.endtime.strftime('%l:%M %p') }} </div>
+                <div class="col-sm-8"> {{ event.datetime.strftime('%I:%M %p').lstrip('0') }} </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"> <strong>Genre:</strong> </div>
@@ -135,7 +135,7 @@
                 <div class="d-flex justify-content-between">
                     <h5 class="card-title"> {{ comment.author.first_name }} {{ comment.author.surname }} </h5>
                     <small class="text-muted">
-                        {{ comment.datetime.strftime('%e/%m/%Y %l:%M %p') }}
+                        {{ comment.datetime.strftime('%d/%m/%Y %I:%M %p').lstrip('0') }}
                     </small>
                 </div>
                 <p class="card-text mb-0">

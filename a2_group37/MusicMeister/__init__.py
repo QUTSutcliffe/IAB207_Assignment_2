@@ -1,5 +1,5 @@
 # import flask - from 'package' import 'Class'
-from flask import Flask 
+from flask import Flask, render_template 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -13,7 +13,7 @@ def create_app():
   
    app = Flask(__name__)  # this is the name of the module/package that is calling this app
    # Should be set to false in a production environment
-   app.debug = True
+   app.debug = False
    app.secret_key = 'somesecretkey'
    # set the app configuration data 
    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sitedata.sqlite'
@@ -63,4 +63,14 @@ def create_app():
    from . import auth
    app.register_blueprint(auth.auth_bp)
 
+   # Error 404 and 500 handlers
+   @app.errorhandler(404)
+   def page_not_found(e):
+      return render_template('404.html'), 404
+
+
+   @app.errorhandler(500)
+   def internal_server_error(e):
+      db.session.rollback()
+      return render_template('500.html'), 500
    return app
