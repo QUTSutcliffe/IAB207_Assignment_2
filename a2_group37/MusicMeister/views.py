@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app
+from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app, abort
 from flask_login import login_required, current_user
 from . import db
 from .forms import BookingForm, EventForm, CommentForm
@@ -37,21 +37,21 @@ def index():
 def details(event_id):
     event = db.session.get(Event, event_id)
     comments = Comment.query.filter_by(commented_event=event_id).all()
-    if event is None:
-        flash('Event does not exist.')
-        return redirect(url_for('main.index'))
 
+
+    if event is None:
+        abort(404)
     booked = db.session.scalar(
     db.select(func.coalesce(func.sum(Order.ticket_quantity), 0))
     .where(Order.for_event == event.id))
 
     available = max(event.capacity - booked, 0)
-    
+
     booking_form = BookingForm()
-    
+
     comment_form = CommentForm()
     comment_text = comment_form.comment_text.data
-        
+
     if comment_form.validate_on_submit():
         if not current_user.is_authenticated:
             flash('Please log in to leave comments.')
@@ -79,7 +79,7 @@ def details(event_id):
         return redirect(url_for('auth.login'))
 
     ticket_quantity = booking_form.ticket_quantity.data
-    
+
     if booking_form.validate_on_submit():
         ticket_quantity = booking_form.ticket_quantity.data
 
@@ -116,9 +116,13 @@ def details(event_id):
 @main_bp.route('/edit-event/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def edit_event(event_id):
+
     event = db.session.get(Event, event_id)
     if event is None:
         abort(404)
+
+    if event.owner_id != current_user.id:
+        abort(403)
 
     form = EventForm(obj=event)
     try:
@@ -141,6 +145,9 @@ def cancel_event(event_id):
     if event is None:
         abort(404)
 
+    if event.owner_id != current_user.id:
+        abort(403)
+
     try:
         event.status = 'Cancelled'
         db.session.commit()
@@ -161,13 +168,13 @@ def create_event():
         if existing:
             form.name.errors.append("An event with this name already exists")
             return render_template('create-event.html', form=form)
- 
+
         image_path = "./static/img/band.jpg"
         file = form.image.data
         filename = str(uuid.uuid1())
         file.save(os.path.join(current_app.root_path, 'static', 'img', filename))
         image_path = f"./static/img/{filename}"
- 
+
         event = Event(
             name=form.name.data,
             description=form.description.data,
@@ -191,6 +198,7 @@ def create_event():
     return render_template('create-event.html', form=form)
 
 @main_bp.route('/orders')
+@login_required
 def orders():
     orders = Order.query.filter_by(order_owner=current_user.id).all()
     return render_template('orders.html', orders=orders)
