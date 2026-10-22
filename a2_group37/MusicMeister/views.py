@@ -21,8 +21,7 @@ def details(event_id):
     event = db.session.get(Event, event_id)
     comments = Comment.query.filter_by(commented_event=event_id).all()
     if event is None:
-        flash('Event does not exist.')
-        return redirect(url_for('main.index'))
+        return render_template('404.html'), 404
 
     booked = db.session.scalar(
     db.select(func.coalesce(func.sum(Order.ticket_quantity), 0))
@@ -100,9 +99,6 @@ def details(event_id):
 @login_required
 def edit_event(event_id):
     event = db.session.get(Event, event_id)
-    if event is None:
-        abort(404)
-
     form = EventForm(obj=event)
     try:
         if form.validate_on_submit():
@@ -150,7 +146,16 @@ def create_event():
         filename = str(uuid.uuid1())
         file.save(os.path.join(current_app.root_path, 'static', 'img', filename))
         image_path = f"./static/img/{filename}"
- 
+
+
+        if form.acknowledgement.data == 'generic':
+            acknowledgement_message = (
+                "This event acknowledges the Traditional Owners of the land "
+                "on which we meet and pays its respects to Elders "
+                "past and present."
+            )
+        elif form.acknowledgement.data == 'enhanced':
+            acknowledgement_message = form.acknowledgementtext.data
         event = Event(
             name=form.name.data,
             description=form.description.data,
@@ -165,6 +170,7 @@ def create_event():
             capacity=form.capacity.data,
             status="Open",
             acknowledgement=form.acknowledgement.data,
+            acknowledgement_message=acknowledgement_message,
             owner_id=current_user.id
         )
         db.session.add(event)

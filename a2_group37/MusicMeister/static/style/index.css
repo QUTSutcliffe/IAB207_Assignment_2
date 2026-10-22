@@ -46,3 +46,32 @@ h1 {
 .card .btn.position-absolute {
     width: auto;
 }
+
+#enhanced-acknowledgement {
+    display: none;
+}
+
+form:has(
+    input[name="acknowledgement"][value="enhanced"]:checked
+) #enhanced-acknowledgement {
+    display: block;
+}
+
+#enhanced-acknowledgement details {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#enhanced-acknowledgement summary {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.acknowledgement-box {
+    background-color: #e5f0e5;
+    border-left: 4px solid #608b60;
+    padding: 15px;
+    border-radius: 5px;
+    color: #2f4932;
+}
+
