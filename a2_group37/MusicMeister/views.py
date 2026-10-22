@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app
+from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app, abort
 from flask_login import login_required, current_user
 from . import db
 from .forms import BookingForm, EventForm, CommentForm
 from .models import Event, Order, Comment, User
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from flask_login import current_user
 from datetime import datetime
 import uuid
@@ -13,28 +13,45 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    events = Event.query.all() #getting all events from db
-    return render_template('index.html', events = events)
+    # Apply user-selected filters on the server (no custom JavaScript required).
+    search = request.args.get('search', '', type=str).strip()
+    status = request.args.get('status', '', type=str).strip()
+    category = request.args.get('category', '', type=str).strip()
+    query = Event.query
+    if search:
+        term = f'%{search}%'
+        query = query.filter(or_(Event.name.ilike(term),
+                                 Event.description.ilike(term),
+                                 Event.venue.ilike(term),
+                                 Event.location.ilike(term)))
+    if status:
+        query = query.filter(Event.status == status)
+    if category:
+        query = query.filter(Event.category == category)
+    events = query.order_by(Event.datetime.asc()).all()
+    categories = [name for (name,) in db.session.query(Event.category).distinct().order_by(Event.category).all() if name]
+    return render_template('index.html', events=events, search=search,
+                           status=status, category=category, categories=categories)
 
 @main_bp.route('/details/<int:event_id>', methods=['GET', 'POST'])
 def details(event_id):
     event = db.session.get(Event, event_id)
     comments = Comment.query.filter_by(commented_event=event_id).all()
-    if event is None:
-        flash('Event does not exist.')
-        return redirect(url_for('main.index'))
 
+
+    if event is None:
+        abort(404)
     booked = db.session.scalar(
     db.select(func.coalesce(func.sum(Order.ticket_quantity), 0))
     .where(Order.for_event == event.id))
 
     available = max(event.capacity - booked, 0)
-    
+
     booking_form = BookingForm()
-    
+
     comment_form = CommentForm()
     comment_text = comment_form.comment_text.data
-        
+
     if comment_form.validate_on_submit():
         if not current_user.is_authenticated:
             flash('Please log in to leave comments.')
@@ -62,7 +79,7 @@ def details(event_id):
         return redirect(url_for('auth.login'))
 
     ticket_quantity = booking_form.ticket_quantity.data
-    
+
     if booking_form.validate_on_submit():
         ticket_quantity = booking_form.ticket_quantity.data
 
@@ -99,9 +116,13 @@ def details(event_id):
 @main_bp.route('/edit-event/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def edit_event(event_id):
+
     event = db.session.get(Event, event_id)
     if event is None:
         abort(404)
+
+    if event.owner_id != current_user.id:
+        abort(403)
 
     form = EventForm(obj=event)
     try:
@@ -124,6 +145,9 @@ def cancel_event(event_id):
     if event is None:
         abort(404)
 
+    if event.owner_id != current_user.id:
+        abort(403)
+
     try:
         event.status = 'Cancelled'
         db.session.commit()
@@ -144,13 +168,13 @@ def create_event():
         if existing:
             form.name.errors.append("An event with this name already exists")
             return render_template('create-event.html', form=form)
- 
+
         image_path = "./static/img/band.jpg"
         file = form.image.data
         filename = str(uuid.uuid1())
         file.save(os.path.join(current_app.root_path, 'static', 'img', filename))
         image_path = f"./static/img/{filename}"
- 
+
         event = Event(
             name=form.name.data,
             description=form.description.data,
@@ -174,6 +198,7 @@ def create_event():
     return render_template('create-event.html', form=form)
 
 @main_bp.route('/orders')
+@login_required
 def orders():
     orders = Order.query.filter_by(order_owner=current_user.id).all()
     return render_template('orders.html', orders=orders)
