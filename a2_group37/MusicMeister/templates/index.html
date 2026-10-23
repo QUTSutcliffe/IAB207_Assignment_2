@@ -5,6 +5,22 @@
 {% endblock %}
 
 {% block content %}
+<header class="position-relative overflow-hidden bg-dark text-white text-center py-5" aria-label="Welcome">
+    <span class="position-absolute top-0 start-0 m-3 ms-5 display-1 opacity-25" aria-hidden="true">&#9835;</span>
+    <span class="position-absolute bottom-0 start-0 m-3 ms-5 mb-0 display-4 opacity-25 d-none d-md-block"
+        aria-hidden="true">&#9834;</span>
+    <span class="position-absolute top-50 start-50 translate-middle-y ms-5 display-5 opacity-25 d-none d-lg-block"
+        aria-hidden="true">&#9836;</span>
+    <span class="position-absolute top-0 end-0 m-3 me-5 display-4 opacity-25 d-none d-md-block"
+        aria-hidden="true">&#9833;</span>
+    <span class="position-absolute bottom-0 end-0 m-3 me-5 mb-0 display-1 opacity-25" aria-hidden="true">&#9835;</span>
+
+    <div class="container position-relative py-3">
+        <h1 class="display-5 fw-bold">Find your next show</h1>
+        <p class="lead mb-0">Browse concerts and gigs across every genre, or host your own.</p>
+    </div>
+</header>
+
 <section class="container mt-4" aria-label="Find events">
     <form action="{{ url_for('main.index') }}" method="get"
         class="row g-3 align-items-end p-3 border rounded bg-light text-dark">
