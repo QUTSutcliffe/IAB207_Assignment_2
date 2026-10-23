@@ -160,9 +160,10 @@ def create_event():
  
         image_path = "./static/img/band.jpg"
         file = form.image.data
-        filename = str(uuid.uuid1())
-        file.save(os.path.join(current_app.root_path, 'static', 'img', filename))
-        image_path = f"./static/img/{filename}"
+        if file and file.filename:
+            filename = str(uuid.uuid1())
+            file.save(os.path.join(current_app.root_path, 'static', 'img', filename))
+            image_path = f"./static/img/{filename}"
 
 
         if form.acknowledgement.data == 'generic':
