@@ -22,26 +22,17 @@ def create_app():
 
    Bootstrap5(app)
     
-    #scheduler for regularly updating event statuses
-   from apscheduler.schedulers.background import BackgroundScheduler
+   import time
    from .tasks import update_event_statuses
-   
-   
-   
-   scheduler = BackgroundScheduler()
-   scheduler.add_job(
-      update_event_statuses,
-      args=[app],
-      trigger="interval",
-      minutes=1,
-      id="update_event_statuses",
-      max_instances=1,
-      coalesce=True,
-      replace_existing=True,
-      next_run_time=datetime.now(),
-   )
-   scheduler.start()
-    
+   last_run = {"t": 0}
+
+   # regularly check and update status of events (every 5 seconds)
+   @app.before_request
+   def refresh_statuses():
+      if time.time() - last_run["t"] > 5:
+         last_run["t"] = time.time()
+         update_event_statuses(app)
+      
    # initialise the login manager
    login_manager = LoginManager()
 
