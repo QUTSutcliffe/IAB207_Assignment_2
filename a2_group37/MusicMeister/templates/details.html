@@ -67,12 +67,22 @@
                 <div class="col-sm-4"> <strong>Planned Program:</strong> </div>
                 <div class="col-sm-8"> {{ event.program }} </div>
             </div>
+            {% if event.acknowledgement != 'none' and event.acknowledgement %}
             <div class="row mb-4">
-                <div class="col-sm-4"> <strong>Acknowledgement: </strong> </div>
-                <div class="col-sm-8">
-                    {{ event.acknowledgement }}
+                <div class="col-sm-12">
+                    {% if event.acknowledgement == 'generic' %}
+                        <div class="acknowledgement-box">
+                            {{ event.acknowledgement_message }}
+                        </div>
+
+                    {% elif event.acknowledgement == 'enhanced' %}
+                        <div class="acknowledgement-box">
+                            {{ event.acknowledgement_message }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
+            {% endif %}
 
             <hr>
 

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% from "bootstrap5/form.html" import render_form %}
+{% from "bootstrap5/form.html" import render_field %}
 
 {% block styles %}
+<link href="{{ url_for('static', filename='style/index.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -11,11 +12,135 @@
         </a>
         <div class="row g-5">
             <div class="col-12 col-lg-6">
-                <img src="./static/img/band.jpg" class="img-fluid rounded shadow w-100"
+                 <img src="{{ url_for('static', filename='img/band.jpg') }}" class="img-fluid rounded shadow w-100"
                     alt="Your Image">
             </div>
             <div class="col-12 col-lg-6 user-form">
-                {{ render_form(form) }}
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+
+                <!-- Section 1/3 Event Details-->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Event Details</h5>
+                    </div>
+                    <div class="card-body">
+                    {{ render_field(form.name) }}
+                    {{ render_field(form.description) }}
+                    {{ render_field(form.venue) }}
+                    {{ render_field(form.location) }}
+                    {{ render_field(form.datetime) }}
+                    {{ render_field(form.endtime) }}
+                    {{ render_field(form.category) }}
+                    {{ render_field(form.program) }}
+                    </div>
+                </div>
+
+                <!-- Section 2/3 Ack of Country -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Acknowledgement of Country</h5>
+                    </div>
+                    <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.acknowledgement.label.text }}</label>
+                        <div class="btn-group d-flex flex-wrap" role="group">
+                            {% for value, label in form.acknowledgement.choices %}
+                                <input type="radio" class="btn-check"name="acknowledgement"id="ack-{{ value }}"value="{{ value }}"autocomplete="off"
+                                    {% if form.acknowledgement.data == value %}checked{% endif %}>
+                                <label class="btn btn-outline-primary" for="ack-{{ value }}">
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted d-block mt-2">An Acknowledgement to country is an opportunity for anyone to show respect for Traditional Owners and the continuing connection of Aboriginal and Torres Strait Islander peoples to Country. This recognition is important as it contributes to ending the exclusion that has been so damaging to this country. This can be presented by anyone if sincere and informed, unlike a Welcome to Country which is delivered by elders, traditional owners of the land, or Aboriginal and Torres Strait Islander people.</small>
+
+
+                        {% for error in form.acknowledgement.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div id="enhanced-acknowledgement">
+                        <div class="mb-3">
+                            <label class="form-label">Traditional Custodian Information</label>
+
+                            <details>
+                                <summary>Meanjin/Magandjin (Brisbane)⁠ </summary>
+                                <p>Yuggera/Jagera and Turrbal Country</p>
+                            </details>
+                            <details>
+                                <summary>Tarndanya (Adelaide)</summary>
+                                <p>Kaurna Country</p>
+                            </details>
+                            <details>
+                                <summary>Canberra </summary>
+                                <p>Ngambri and Ngunnawal Country</p>
+                            </details>
+                            <details>
+                                <summary>nipaluna (Hobart)⁠ </summary>
+                                <p>nipaluna country</p>
+                            </details>
+                            <details>
+                                <summary>Gulumoerrgin (Darwin)</summary>
+                                <p>Larrakia Country</p>
+                            </details>
+                            <details>
+                                <summary>Naarm (Melbourne)</summary>
+                                <p>Wurundjeri and Boon Wurrung Country</p>
+                            </details>
+                            <details>
+                                <summary>Boorloo (Perth)⁠ </summary>
+                                <p>Whadjuk Noongar Country</p>
+                            </details>
+                            <details>
+                                <summary>Gimuy (Cairns)</summary>
+                                <p>Yirriganydji and Yidinji Country</p>
+                            </details>
+
+                            <small class="text-muted d-block mt-2">
+                                Capital Cities alone do not identify the correct Traditional Custodians everywhere in the corresponding State.
+                                Please check reliable local Aboriginal community or council sources for
+                                further specific event locations if you are not sure.
+                            </small>
+                        </div>
+
+                        {{ render_field(form.acknowledgementtext) }}
+                    </div>
+                     <div id="enhanced-acknowledgement">
+                        <div class="mb-3">
+                            <label class="form-label">Need Help?</label>
+
+                            <details>
+                                <summary>Example 1⁠ </summary>
+                                <p>"I respectfully acknowledge the past and present Traditional Custodians of this land on which
+                                    we are meeting, the (traditional name(s)) people. It is a privilege to be standing on (traditional
+                                    name) Country. I also acknowledge the contributions of Aboriginal Australians and nonAboriginal Australians to the education of all children and people in this country we all live in and
+                                    share together – Australia."</p>
+                            </details>
+                            <details>
+                                <summary>Example 2 </summary>
+                                <p>"I’d like to acknowledge the Traditional Owners of the land on which we meet today, the (people) of the (nation) and pay my respects to Elders past and present."</p>
+                            </details>
+                            <br>
+                         </div>
+                            </div>
+                            </div>
+                            </div>
+
+                    <!-- Section 3/3 Tickets -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Ticket Details</h5>
+                    </div>
+                    <div class="card-body">        
+                    {{ render_field(form.price) }}
+                    {{ render_field(form.capacity) }}
+                    {{ render_field(form.image) }}
+                    {{ render_field(form.submit) }}
+                    </div>
+                    </div>
+                </form> 
             </div>
         </div>
 

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField, IntegerField, DateTimeLocalField, SelectField, DecimalField, FileField
-from wtforms.validators import InputRequired, Length, Email, EqualTo, NumberRange
+from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField, IntegerField, DateTimeLocalField, SelectField, DecimalField, FileField, RadioField
+from wtforms.validators import InputRequired, Length, Email, EqualTo, NumberRange, Optional, ValidationError
 from flask_wtf.file import FileAllowed
 
 # creates the login information
@@ -39,13 +39,26 @@ class EventForm(FlaskForm):
     endtime = DateTimeLocalField("End Time", format="%Y-%m-%dT%H:%M", validators=[InputRequired()])
     category = SelectField("Genre", choices=[('', 'Select a genre'), ('Rock', 'Rock'), ('Country', 'Country'), ('Hip Hop', 'Hip Hop'), ('Pop', 'Pop'), ('EDM', 'EDM'), ('Jazz', 'Jazz'), ('Classical', 'Classical'), ('Latin', 'Latin'), ('Reggae', 'Reggae')], validators=[InputRequired()])
     program = TextAreaField("Planned Program", validators=[InputRequired(), Length(max=1000)])
-    acknowledgement = TextAreaField("Acknowledgement", validators=[Length(max=500)])
+    acknowledgement = RadioField("Acknowledgement of Country", choices=[('none', 'No Acknowledgement'),('generic', 'Generic'),('enhanced', 'Enhanced')], default='none', validators=[InputRequired()])
+
+    acknowledgementtext = TextAreaField(
+        "Acknowledgement Message",
+        validators=[Optional(), Length(max=1000)],
+        description="Enter an acknowledgement referring to an appropriate location to where your event takes place."
+    )
     price = IntegerField("Ticket Price ($)", validators=[InputRequired(), NumberRange(min=0)])
     capacity = IntegerField("Total Ticket Capacity", validators=[InputRequired(), NumberRange(min=1)])
     image = FileField("Event Image", validators=[FileAllowed(['jpg', 'jpeg', 'png', 'webp'], "Images only")])
 # submit button
     submit = SubmitField("Submit Event")
- 
+
+# shows further fields if enhanced ack type is picked
+    def validate_acknowledgementtext(self, field):
+        if self.acknowledgement.data == 'enhanced':
+            if not field.data or not field.data.strip():
+                raise ValidationError(
+                    "Please enter an acknowledgement message."
+                )
 # end time must be after the start time
     def validate_endtime(self, field):
         if self.datetime.data and field.data <= self.datetime.data:
