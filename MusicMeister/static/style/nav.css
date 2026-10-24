@@ -12,3 +12,29 @@ body {
     font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
 }
+
+nav {
+    height: 75px;
+}
+
+.navbar .container-fluid {
+    display: flex;
+    align-items: center;
+    transform: translateY(4px);
+}
+
+nav.navbar {
+    position: relative;
+    z-index: 1030;
+    overflow: visible;
+    border-bottom: 1.5px solid lightgrey;
+    margin-bottom: 0;
+}
+
+.navbar .dropdown {
+    position: relative;
+}
+
+.navbar .dropdown-menu {
+    z-index: 1040;
+}

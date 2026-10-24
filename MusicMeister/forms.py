@@ -26,7 +26,7 @@ class RegisterForm(FlaskForm):
 
 # booking form
 class BookingForm(FlaskForm):
-     ticket_quantity = IntegerField("Number of Tickets", validators=[InputRequired(), NumberRange(min=1, max=10)], default=1)
+     ticket_quantity = IntegerField("Number of Tickets", validators=[InputRequired(), NumberRange(min=1)], default=1)
      submit = SubmitField("Book Tickets")
 
 #  event form to be used for creating and editing events

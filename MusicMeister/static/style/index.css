@@ -75,3 +75,8 @@ form:has(
     color: #2f4932;
 }
 
+.card-body .badge {
+    align-self: flex-start;
+    width: fit-content;
+    align-self: center;
+}
