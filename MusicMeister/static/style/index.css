@@ -80,3 +80,7 @@ form:has(
     width: fit-content;
     align-self: center;
 }
+
+.tab-content {
+    padding-bottom: 2rem;
+}
