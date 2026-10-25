@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app
+﻿from flask import Blueprint, render_template, flash, request, url_for, redirect, current_app, abort
 from flask_login import login_required, current_user
 from . import db
 from .forms import BookingForm, EventForm, CommentForm
@@ -162,6 +162,10 @@ def details(event_id):
 @login_required
 def edit_event(event_id):
     event = db.session.get(Event, event_id)
+    if event is None:
+        abort(404)
+    if event.owner_id != current_user.id:
+        abort(403)
     form = EventForm(obj=event)
     try:
         if form.validate_on_submit():
@@ -179,6 +183,10 @@ def edit_event(event_id):
 @login_required
 def cancel_event(event_id):
     event = db.session.get(Event, event_id)
+    if event is None:
+        abort(404)
+    if event.owner_id != current_user.id:
+        abort(403)
 
     if event is None:
         abort(404)
@@ -244,6 +252,7 @@ def create_event():
     return render_template('create-event.html', form=form)
 
 @main_bp.route('/orders')
+@login_required
 def orders():
     orders = Order.query.filter_by(order_owner=current_user.id).all()
     return render_template('orders.html', orders=orders)
