@@ -51,6 +51,17 @@
             <button type="submit" class="btn btn-primary flex-fill">Search</button>
             <a class="btn btn-outline-secondary flex-fill" href="{{ url_for('main.index') }}">Clear</a>
         </div>
+       
+        <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox"
+                name="use_ai" id="use_ai" value="1"
+                {% if use_ai %}checked{% endif %}>
+            <small class="form-check-label mt-2" for="use_ai">
+                Use AI Search
+            </small>
+            <small class="recommendedtext">(Recommended)</small>
+        </div>
+
     </form>
     {% if search or status or category %}
     <p class="mt-3 mb-2" role="status">Showing {{ events|length }} result(s)

@@ -8,6 +8,9 @@ from flask_login import current_user
 from datetime import datetime
 import uuid
 import os
+from functools import lru_cache
+from sentence_transformers import SentenceTransformer
+
 
 main_bp = Blueprint('main', __name__)
 
@@ -18,20 +21,63 @@ def index():
     status = request.args.get('status', '', type=str).strip()
     category = request.args.get('category', '', type=str).strip()
     query = Event.query
+    use_ai = 'use_ai' in request.args
+    if status:
+            query = query.filter(Event.status == status)
+    if category:
+            query = query.filter(Event.category == category)
+    events = query.order_by(Event.datetime.asc()).all()
+    keyword_searches = []
     if search:
         term = f'%{search}%'
-        query = query.filter(or_(Event.name.ilike(term),
-                                 Event.description.ilike(term),
-                                 Event.venue.ilike(term),
-                                 Event.location.ilike(term)))
-    if status:
-        query = query.filter(Event.status == status)
-    if category:
-        query = query.filter(Event.category == category)
-    events = query.order_by(Event.datetime.asc()).all()
+
+        keyword_query = query.filter(
+            or_(
+                Event.name.ilike(term),
+                Event.description.ilike(term),
+                Event.venue.ilike(term),
+                Event.location.ilike(term)
+                )
+            ).order_by(Event.datetime.asc()).all()
+    
+        if use_ai:
+                # selecting events not in the keyword search to use for Ai search
+                keyword_ids = {event.id for event in keyword_query}
+                ai_searchable_events = [
+                    event for event in events
+                    if event.id not in keyword_ids
+                ]
+                if ai_searchable_events:
+                    model=aisearchmodel()
+                    aievent_texts = [
+                        f"{event.name or ''}. "
+                        f"{event.description or ''}. "
+                        f"Genre: {event.category or ''}. "
+                        f"Venue: {event.venue or ''}. "
+                        f"Location: {event.location or ''}"
+                        for event in ai_searchable_events]
+                    
+                    search_embedding = model.encode([search], convert_to_tensor=True)
+                    event_embeddings = model.encode(aievent_texts, convert_to_tensor=True)
+                    similarities = model.similarity(search_embedding, event_embeddings)[0]
+
+                    sorted_indices = similarities.argsort(descending=True).tolist()
+                    ai_searchable_events = [ai_searchable_events[i] for i in sorted_indices]
+
+                #Hybrid Search
+                events = keyword_query + ai_searchable_events
+
+        else:
+            # Keyword Search
+            events = keyword_query
+    
     categories = [name for (name,) in db.session.query(Event.category).distinct().order_by(Event.category).all() if name]
     return render_template('index.html', events=events, search=search,
-                           status=status, category=category, categories=categories)
+                           status=status, category=category, categories=categories, use_ai=use_ai)
+
+@lru_cache(maxsize=1)
+def aisearchmodel():
+    return SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
 @main_bp.route('/details/<int:event_id>', methods=['GET', 'POST'])
 def details(event_id):

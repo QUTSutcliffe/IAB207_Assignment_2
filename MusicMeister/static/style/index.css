@@ -34,6 +34,8 @@ h1 {
 
 .card:hover {
     transform: translateY(-5px);
+    border-color: lightblue;
+    border-width: 2.5px;
 }
 .card-img-top {
     height: 200px;
@@ -83,4 +85,13 @@ form:has(
 
 .tab-content {
     padding-bottom: 2rem;
+}
+
+.recommendedtext {
+    color: darkgreen;
+    font-weight: bold;
+}
+
+.form-check {
+    margin-left: 11px;
 }
