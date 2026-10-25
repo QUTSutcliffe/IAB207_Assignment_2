@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+<main class="container my-5">
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary mb-4">
+        Back to Events
+    </a>
+
+    <div class="row g-5">
+        <div class="col-12 col-lg-6">
+            <img src="{{ url_for('static', filename=event.image_path.replace('./static/', '')) }}"
+                 class="img-fluid rounded shadow w-100"
+                 alt="{{ event.title }}">
+        </div>
+        <div class="col-12 col-lg-6 user-form">
+            <p class="mb-4">
+                <strong>Event Status:</strong>
+                {% if event.status == 'Open' %}
+                <span class="badge bg-success">{{ event.status }}</span>
+                {% elif event.status == 'Inactive' %}
+                <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                {% elif event.status == 'Sold Out' %}
+                <span class="badge bg-secondary">{{ event.status }}</span>
+                {% elif event.status == 'Cancelled' %}
+                <span class="badge bg-danger">{{ event.status }}</span>
+                {% endif %}
+                <br>
+                <small>Event status is managed automatically.</small>
+            </p>
+            {% if event.status != 'Cancelled' %}
+            {{ render_form(form) }}
+            
+
+            <hr>
+            <h2 class="mb-3">Cancel Event</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <strong>This will cancel your event and refund all tickets. This is irreversible and cannot be undone.</strong>
+                    <button type="button" class="btn btn-danger w-100 mt-3" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                        Cancel Event
+                    </button>
+                </div>
+            </div>
+            {% else %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    Event has been cancelled. All tickets have been refunded.
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Are you sure?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert">This cannot be undone. Be sure before continuing.</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Go Back</button>
+                <form method="POST" action="{{ url_for('main.cancel_event', event_id=event.id) }}">
+                    <button type="submit" class="btn btn-danger">Cancel Event</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

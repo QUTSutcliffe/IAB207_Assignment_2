@@ -35,6 +35,7 @@ class Event(db.Model):
     capacity = db.Column(db.Integer, index=True)
     status = db.Column(db.String(64), index=True)
     acknowledgement = db.Column(db.String(1000))
+    acknowledgement_message = db.Column(db.String(1000))
     
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     

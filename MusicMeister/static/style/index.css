@@ -1,0 +1,97 @@
+.dropdown-toggle::after {
+    display: none;
+}
+
+
+.nav-item.bum{
+    margin: 1rem;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.nav-pills {
+    gap: 5px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: lightblue;
+    border-width: 2.5px;
+}
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+.card .btn {
+    width: 100%;
+}
+
+.card .btn.position-absolute {
+    width: auto;
+}
+
+#enhanced-acknowledgement {
+    display: none;
+}
+
+form:has(
+    input[name="acknowledgement"][value="enhanced"]:checked
+) #enhanced-acknowledgement {
+    display: block;
+}
+
+#enhanced-acknowledgement details {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#enhanced-acknowledgement summary {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.acknowledgement-box {
+    background-color: #e5f0e5;
+    border-left: 4px solid #608b60;
+    padding: 15px;
+    border-radius: 5px;
+    color: #2f4932;
+}
+
+.card-body .badge {
+    align-self: flex-start;
+    width: fit-content;
+    align-self: center;
+}
+
+.tab-content {
+    padding-bottom: 2rem;
+}
+
+.recommendedtext {
+    color: darkgreen;
+    font-weight: bold;
+}
+
+.form-check {
+    margin-left: 11px;
+}

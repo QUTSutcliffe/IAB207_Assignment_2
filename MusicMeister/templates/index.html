@@ -1,0 +1,532 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='style/index.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<header class="position-relative overflow-hidden bg-dark text-white text-center py-5" aria-label="Welcome">
+    <span class="position-absolute top-0 start-0 m-3 ms-5 display-1 opacity-25" aria-hidden="true">&#9835;</span>
+    <span class="position-absolute bottom-0 start-0 m-3 ms-5 mb-0 display-4 opacity-25 d-none d-md-block"
+        aria-hidden="true">&#9834;</span>
+    <span class="position-absolute top-50 start-50 translate-middle-y ms-5 display-5 opacity-25 d-none d-lg-block"
+        aria-hidden="true">&#9836;</span>
+    <span class="position-absolute top-0 end-0 m-3 me-5 display-4 opacity-25 d-none d-md-block"
+        aria-hidden="true">&#9833;</span>
+    <span class="position-absolute bottom-0 end-0 m-3 me-5 mb-0 display-1 opacity-25" aria-hidden="true">&#9835;</span>
+
+    <div class="container position-relative py-3">
+        <h1 class="display-5 fw-bold">Find your next show</h1>
+        <p class="lead mb-0">Browse concerts and gigs across every genre, or host your own.</p>
+    </div>
+</header>
+
+<section class="container mt-4" aria-label="Find events">
+    <form action="{{ url_for('main.index') }}" method="get"
+        class="row g-3 align-items-end p-3 border rounded bg-light text-dark">
+        <div class="col-12 col-md-5">
+            <label for="event-search" class="form-label fw-semibold">Search events</label>
+            <input id="event-search" class="form-control" type="search" name="search" value="{{ search }}"
+                placeholder="Artist, event, venue or location">
+        </div>
+        <div class="col-6 col-md-3">
+            <label for="event-category" class="form-label fw-semibold">Category</label>
+            <select id="event-category" name="category" class="form-select">
+                <option value="">All categories</option>
+                {% for option in categories %}
+                <option value="{{ option }}" {% if category==option %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <label for="event-status" class="form-label fw-semibold">Status</label>
+            <select id="event-status" name="status" class="form-select">
+                <option value="">All statuses</option>
+                {% for option in ['Open', 'Sold Out', 'Inactive', 'Cancelled'] %}
+                <option value="{{ option }}" {% if status==option %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-2 flex-md-column">
+            <button type="submit" class="btn btn-primary flex-fill">Search</button>
+            <a class="btn btn-outline-secondary flex-fill" href="{{ url_for('main.index') }}">Clear</a>
+        </div>
+       
+        <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox"
+                name="use_ai" id="use_ai" value="1"
+                {% if use_ai %}checked{% endif %}>
+            <small class="form-check-label mt-2" for="use_ai">
+                Use AI Search
+            </small>
+            <small class="recommendedtext">(Recommended)</small>
+        </div>
+
+    </form>
+    {% if search or status or category %}
+    <p class="mt-3 mb-2" role="status">Showing {{ events|length }} result(s)
+        {% if search %} for <strong>“{{ search }}”</strong>{% endif %}
+        {% if category %} in <strong>{{ category }}</strong>{% endif %}
+        {% if status %} with status <strong>{{ status }}</strong>{% endif %}.
+    </p>
+    {% endif %}
+    {% if not events %}
+    <div class="alert alert-info mt-3" role="status">No events match your search or filters. Try another keyword or <a
+            href="{{ url_for('main.index') }}" class="alert-link">view all events</a>.</div>
+    {% endif %}
+</section>
+<ul class="nav nav-pills my-3 justify-content-center" id="pills-tab" role="tablist">
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all"
+            type="button" role="tab" aria-controls="pills-all" aria-selected="true">
+            All
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-rock-tab" data-bs-toggle="pill" data-bs-target="#pills-rock" type="button"
+            role="tab" aria-controls="pills-rock" aria-selected="false">
+            Rock
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-country-tab" data-bs-toggle="pill" data-bs-target="#pills-country"
+            type="button" role="tab" aria-controls="pills-country" aria-selected="false">
+            Country
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-hiphop-tab" data-bs-toggle="pill" data-bs-target="#pills-hiphop"
+            type="button" role="tab" aria-controls="pills-hiphop" aria-selected="false">
+            Hip Hop
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-pop-tab" data-bs-toggle="pill" data-bs-target="#pills-pop" type="button"
+            role="tab" aria-controls="pills-pop" aria-selected="false">
+            Pop
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-edm-tab" data-bs-toggle="pill" data-bs-target="#pills-edm" type="button"
+            role="tab" aria-controls="pills-edm" aria-selected="false">
+            EDM
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-jazz-tab" data-bs-toggle="pill" data-bs-target="#pills-jazz" type="button"
+            role="tab" aria-controls="pills-jazz" aria-selected="false">
+            Jazz
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-classical-tab" data-bs-toggle="pill" data-bs-target="#pills-classical"
+            type="button" role="tab" aria-controls="pills-classical" aria-selected="false">
+            Classical
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-latin-tab" data-bs-toggle="pill" data-bs-target="#pills-latin" type="button"
+            role="tab" aria-controls="pills-latin" aria-selected="false">
+            Latin
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-reggae-tab" data-bs-toggle="pill" data-bs-target="#pills-reggae"
+            type="button" role="tab" aria-controls="pills-reggae" aria-selected="false">
+            Reggae
+        </button>
+    </li>
+
+    <li class="nav-item bum" role="presentation">
+        <button class="nav-link" id="pills-yours-tab" data-bs-toggle="pill" data-bs-target="#pills-yours" type="button"
+            role="tab" aria-controls="pills-yours" aria-selected="false">
+            Yours
+        </button>
+    </li>
+
+</ul>
+<div class="tab-content text-center" id="pills-tabContent">
+
+
+    <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
+
+        <h1>All Events</h1>
+
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            <div class="card mx-auto" style="width: 18rem;">
+                {% if event.owner_id == current_user.id %}
+                <a href="{{ url_for('main.edit_event', event_id=event.id) }}"
+                    class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2">
+                    Edit
+                </a>
+                {% endif %}
+                <img src="{{event.image_path}}" class="card-img-top" alt="Rock event">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{event.name}}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{event.description}}</p>
+                    <p class="card-text"><strong>Genre: </strong>{{event.category}}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+    <div class="tab-pane fade" id="pills-rock" role="tabpanel" aria-labelledby="pills-rock-tab">
+        <h1>Rock Events</h1>
+
+
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Rock' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-country" role="tabpanel" aria-labelledby="pills-country-tab">
+
+        <h1>Country Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Country' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-hiphop" role="tabpanel" aria-labelledby="pills-hiphop-tab">
+
+        <h1>Hip Hop Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Hip Hop' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-pop" role="tabpanel" aria-labelledby="pills-pop-tab">
+
+        <h1>Pop Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Pop' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-edm" role="tabpanel" aria-labelledby="pills-edm-tab">
+
+        <h1>EDM Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'EDM' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-jazz" role="tabpanel" aria-labelledby="pills-jazz-tab">
+
+        <h1>Jazz Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Jazz' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-classical" role="tabpanel" aria-labelledby="pills-classical-tab">
+
+        <h1>Classical Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Classical' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-latin" role="tabpanel" aria-labelledby="pills-latin-tab">
+
+        <h1>Latin Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Latin' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-reggae" role="tabpanel" aria-labelledby="pills-reggae-tab">
+
+        <h1>Reggae Events</h1>
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.category == 'Reggae' %}
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src="{{ event.image_path }}" class="card-img-top" alt="{{ event.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text"><strong>Genre:</strong> {{ event.category }}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="pills-yours" role="tabpanel" aria-labelledby="pills-yours-tab">
+
+        <h1>Your Events</h1>
+
+        <p class="text-muted">
+            View the events you have created.
+        </p>
+
+        <div class="container d-flex flex-wrap justify-content-center gap-4 mt-5">
+            {% for event in events %}
+            {% if event.owner_id == current_user.id %}
+            <div class="card mx-auto " style="width: 18rem;">
+                {% if event.owner_id == current_user.id %}
+                <a href="{{ url_for('main.edit_event', event_id=event.id) }}"
+                    class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2">
+                    Edit
+                </a>
+                {% endif %}
+                <img src="{{event.image_path}}" class="card-img-top" alt="Rock event">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{event.name}}</h5>
+                    <small>Status:</small>
+                    {% if event.status == 'Open' %}
+                    <span class="badge bg-success">{{ event.status }}</span>
+                    {% elif event.status == 'Inactive' %}
+                    <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                    {% elif event.status == 'Sold Out' %}
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                    {% elif event.status == 'Cancelled' %}
+                    <span class="badge bg-danger">{{ event.status }}</span>
+                    {% endif %}
+                    <p class="card-text">{{event.description}}</p>
+                    <p class="card-text"><strong>Genre: </strong>{{event.category}}</p>
+                    <a href="{{ url_for('main.details', event_id=event.id) }}" class="btn btn-primary mt-auto">See Details</a>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+
+</div>
+{% endblock %}

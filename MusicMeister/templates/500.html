@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='style/index.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-1 fw-bold">500</h1>
+    <h2>Something went wrong...</h2>
+
+    <img class="navbar-brand d-block my-5 mx-auto" src="{{ url_for('static', filename='img/errordisplaysadimage.jpg') }}" alt="SadImageErrorDisplay"">
+
+    <p class="lead">Sorry, an unexpected error has occured, please check back later.</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary mt-3">
+        Back to Home
+    </a>
+</div>
+{% endblock %}
+

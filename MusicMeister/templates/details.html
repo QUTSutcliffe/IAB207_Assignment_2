@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+{% block styles %}
+<link href="{{ url_for('static', filename='style/index.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<main class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+            Back to Events
+        </a>
+        {% if event.owner_id == current_user.id %}
+        <a href="{{ url_for('main.edit_event', event_id=event.id) }}" class="btn btn-primary">
+            Edit
+        </a>
+        {% endif %}
+    </div>
+    <div class="row g-5">
+        <div class="col-12 col-lg-6">
+            <img src="{{ url_for('static', filename=event.image_path.replace('./static/', '')) }}"
+                class="img-fluid rounded shadow w-100" alt="{{ event.name }}">
+        </div>
+        <div class="col-12 col-lg-6">
+            <h1 class="mb-3">{{ event.name }}</h1>
+            <p class="mb-4"> <strong>Event Status:</strong>
+                {% if event.status == 'Open' %}
+                <span class="badge bg-success">{{ event.status }}</span>
+                {% elif event.status == 'Inactive' %}
+                <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                {% elif event.status == 'Sold Out' %}
+                <span class="badge bg-secondary">{{ event.status }}</span>
+                {% elif event.status == 'Cancelled' %}
+                <span class="badge bg-danger">{{ event.status }}</span>
+                {% endif %}
+            </p>
+
+            <p class="lead">{{ event.description }}</p>
+            <hr>
+            <h2 class="mb-4"> Event Information </h2>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Venue:</strong> </div>
+                <div class="col-sm-8"> {{ event.venue}} </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Location:</strong> </div>
+                <div class="col-sm-8"> {{ event.location }} </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Date:</strong> </div>
+                <div class="col-sm-8"> {{ event.datetime.strftime('%F') }} </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Start Time:</strong> </div>
+                <div class="col-sm-8"> {{ event.datetime.strftime('%I:%M %p').lstrip('0') }} </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>End Time:</strong> </div>
+                <div class="col-sm-8"> {{ event.endtime.strftime('%I:%M %p').lstrip('0') }} </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Genre:</strong> </div>
+                <div class="col-sm-8"> {{ event.category }} </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4"> <strong>Planned Program:</strong> </div>
+                <div class="col-sm-8"> {{ event.program }} </div>
+            </div>
+            {% if event.acknowledgement != 'none' and event.acknowledgement %}
+            <div class="row mb-4">
+                <div class="col-sm-12">
+                    {% if event.acknowledgement == 'generic' %}
+                        <div class="acknowledgement-box">
+                            {{ event.acknowledgement_message }}
+                        </div>
+
+                    {% elif event.acknowledgement == 'enhanced' %}
+                        <div class="acknowledgement-box">
+                            {{ event.acknowledgement_message }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <hr>
+
+            <h2 class="mb-4"> Ticket Information </h2>
+            <div class="row mb-3">
+                <div class="col-sm-6"><strong>Ticket Price:</strong></div>
+                <div class="col-sm-6">${{ event.price }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6"> <strong>Total Ticket Capacity:</strong> </div>
+                <div class="col-sm-6">{{ event.capacity }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6"> <strong>Tickets Booked:</strong> </div>
+                <div class="col-sm-6">{{ booked }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-sm-6"> <strong>Tickets Available:</strong> </div>
+                <div class="col-sm-6"> <span class="badge bg-success fs-6">{{ available }} tickets remaining </span>
+                </div>
+            </div>
+            <hr>
+            <section>
+                <h2 class="mb-3"> Book Tickets </h2>
+                {% if current_user.is_authenticated %}
+                <div class="alert alert-success"> You are logged in and can book tickets for this event. </div>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="user-form">
+                            {{render_form(form)}}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-warning"> Log in to book tickets for this event. </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+
+    <section class="mt-5">
+        <hr class="mb-5">
+        <h2 class="mb-4"> Comments </h2>
+        {% if current_user.is_authenticated %}
+        <div class="card mt-4 shadow-sm">
+            <div class="card-body">
+                <h3 class="mb-3"> Leave a Comment </h3>
+                <div class="user-form">
+                    {{ render_form(comment_form) }}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info"> You must be logged in to post a comment. </div>
+        {% endif %}
+
+        {% for comment in comments|reverse %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title"> {{ comment.author.first_name }} {{ comment.author.surname }} </h5>
+                    <small class="text-muted">
+                        {{ comment.datetime.strftime('%d/%m/%Y %I:%M %p').lstrip('0') }}
+                    </small>
+                </div>
+                <p class="card-text mb-0">
+                    {{ comment.text }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</main>
+
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel"> Booking Confirmed </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success">Your booking was successful!</div>
+                <p> <strong>Event:</strong>Thunder Road</p>
+                <p> <strong>Tickets Booked:</strong>Selected ticket quantity</p>
+                <p> <strong>Order Reference:</strong>TR-2026-001245</p>
+                <p> <strong>Booking Status:</strong>
+                    <span class="badge bg-success"> Confirmed </span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close </button>
+                <a href="{{ url_for('main.orders') }}" class="btn btn-primary">View Booking History </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
