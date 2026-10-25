@@ -4,6 +4,7 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from datetime import datetime
+import os
 
 db = SQLAlchemy()
 
@@ -11,7 +12,10 @@ db = SQLAlchemy()
 # a web server will run this web application
 def create_app():
   
-   app = Flask(__name__)  # this is the name of the module/package that is calling this app
+   app = Flask(
+        __name__,
+        instance_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), "instance"),
+    )  # this is the name of the module/package that is calling this app
    # Should be set to false in a production environment
    app.debug = False
    app.secret_key = 'somesecretkey'
